@@ -1,16 +1,17 @@
 import express from "express";
-import morgan from "morgan";
-
 const app = express();
-const port = 3000;
 
-app.use(morgan("tiny"));
+const requestTime = function (req, res, next) {
+  req.requestTime = Date.now();
+  next();
+};
+
+app.use(requestTime);
 
 app.get("/", (req, res) => {
-  res.send("Hello Morgan");
+  let responseText = "Hello World!<br>";
+  responseText += `<small>Requested at: ${req.requestTime}</small>`;
+  res.send(responseText);
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
- 
+app.listen(3000);
